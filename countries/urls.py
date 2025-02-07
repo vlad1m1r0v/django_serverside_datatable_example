@@ -1,13 +1,15 @@
 from django.urls import path
 
 from .views import (
-    CountriesView,
-    CountriesDatatableView
+    CountriesListView,
+    CountriesDatatableView,
+    CountriesUpdateView
 )
 
 app_name = "countries"
 
 urlpatterns = [
-    path('', CountriesView.as_view(), name='index'),
+    path('', CountriesListView.as_view(), name='index'),
+    path('<int:pk>/update/', CountriesUpdateView.as_view(), name='update'),
     path('datatable/', CountriesDatatableView.as_view(), name='datatable'),
 ]

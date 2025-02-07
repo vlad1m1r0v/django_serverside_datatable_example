@@ -8,6 +8,11 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!--Datatable Bootstrap5 Theme-->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+    <style>
+        tr {
+            vertical-align: baseline;
+        }
+    </style>
 </head>
 <body>
 <div class="container mx-auto p-3">
@@ -18,9 +23,12 @@
             <th>Population</th>
             <th>Area (km²)</th>
             <th>GDP ($)</th>
+            <!--Extra column for button group-->
+            <th></th>
         </tr>
         <tr>
             <th><input type="text" id="name" class="form-control"></th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -60,9 +68,19 @@
             },
             columns: [
                 {data: "name"},
-                {data: "area"},
                 {data: "population"},
-                {data: "gdp"}
+                {data: "area"},
+                {data: "gdp"},
+                {
+                    data: null,
+                    orderable: false,
+                    render: function (data) {
+                        return '<div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic example">\n' +
+                            '<a style=\'width: 80px\'' + `href="${data.pk}/update/"` + 'class="btn btn-primary">Update</a>\n' +
+                            '<button style=\'width: 80px\' type="button" class="btn btn-danger">Delete</button>\n' +
+                            '</div>'
+                    }
+                }
             ]
         });
 
