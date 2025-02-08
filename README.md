@@ -14,5 +14,12 @@ A simple example of how you can use the Datatables.net library with Django, impl
 
 5. Deletion: Delete a record via an AJAX call. A confirmation modal appears before deletion, and upon success, a toast message confirms the action.
 
+## Some notes
+When working with django-ajax-datatable, I noticed that code from static folder ( JavaScript and CSS (including initialize_table.js) ) modify the table layout in an undesirable way. Specifically:
+1. The pagination with datatable information and "records per page" with search are not aligned properly.
+2. The overall UI structure becomes inconsistent with Bootstrap styling.
+3. The table looks cluttered and harder to use.
+To avoid these issues, I chose not to include the additional ajax_datatable scripts and instead used vanilla DataTables.net initialization. I didn't use default filter fields. Instead I used custom inputs and provided their values to the server for filtering. This ensures a clean and standard UI while still maintaining server-side processing for large datasets.
+
 ## **Preview**
 ![Preview](Preview.png "Preview")
