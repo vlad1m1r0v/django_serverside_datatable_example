@@ -15,3 +15,4 @@ A simple example of how you can use the Datatables.net library with Django, impl
 5. Deletion: Delete a record via an AJAX call. A confirmation modal appears before deletion, and upon success, a toast message confirms the action.
 
 ## **Preview**
+![alt text](IPreview.png "Preview")
