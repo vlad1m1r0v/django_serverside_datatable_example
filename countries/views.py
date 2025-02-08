@@ -1,6 +1,9 @@
 from ajax_datatable import AjaxDatatableView
+from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import (
+    TemplateView,
+    UpdateView)
 
 from .forms import CountryForm
 from .models import Country
@@ -14,7 +17,7 @@ class CountriesDatatableView(AjaxDatatableView):
     model = Country
 
     column_defs = [
-        {'name': 'id','visible': False},
+        {'name': 'id', 'visible': False},
         {'name': 'name'},
         {'name': 'area'},
         {'name': 'population'},
@@ -29,8 +32,14 @@ class CountriesDatatableView(AjaxDatatableView):
         qs = qs.filter(name__icontains=name)
         return qs
 
+
 class CountriesUpdateView(UpdateView):
     template_name = 'update.html'
     model = Country
     form_class = CountryForm
     success_url = reverse_lazy('countries:index')
+
+
+def countries_delete_view(_, pk):
+    Country.objects.get(pk=pk).delete()
+    return JsonResponse({'success': True})

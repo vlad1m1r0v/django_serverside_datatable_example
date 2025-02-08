@@ -12,6 +12,14 @@
         tr {
             vertical-align: baseline;
         }
+
+        td:not(:last-child) {
+            cursor: pointer;
+        }
+
+        .toast-container {
+            z-index: 2000 !important;
+        }
     </style>
 </head>
 <body>
@@ -37,6 +45,35 @@
         <tbody>
         </tbody>
     </table>
+    <!--Modal-->
+    <div id="confirmation-modal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-3 text-uppercase text-danger">warning</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <span>Are you sure you want to delete it?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="modal-submit" type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Toast-->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Object deleted successfully
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
 </div>
 <!--Bootstrap5 JavaScript-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -51,6 +88,9 @@
 <script>
     $(document).ready(function () {
         const $name = $('#name');
+
+        const modal = new bootstrap.Modal($('#confirmation-modal'));
+        const toast = new bootstrap.Toast($('#toast'));
 
         const datatable = new DataTable('#datatable', {
             order: [],
@@ -81,7 +121,31 @@
                             '</div>'
                     }
                 }
-            ]
+            ],
+            createdRow: function (row, data) {
+                $(row).find('td:not(:last-child)').on('click', function () {
+                    document.location.href = `${data.pk}/update/`;
+                });
+
+                $(row).find('.btn-danger').on('click', function () {
+                    modal.show();
+
+                    $('#modal-submit').on('click', function () {
+                        modal.hide();
+
+                        $.ajax({
+                            url: `${data.pk}/delete/`,
+                            method: "DELETE", headers: {
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            },
+                            success: function () {
+                                datatable.ajax.reload();
+                                toast.show();
+                            }
+                        });
+                    })
+                })
+            }
         });
 
         $name.on('keyup', function () {
